@@ -360,11 +360,16 @@
           var publicConfig = await loadPublicConfig(appState.storeKey);
 
           if (!publicConfig.success) {
-            showError(publicConfig.message || "商品情報を取得できませんでした。");
+            showError(
+              publicConfig.message ||
+              "商品情報を取得できませんでした。"
+            );
             return;
           }
 
-          appState.storeKey = publicConfig.storeKey || appState.storeKey;
+          appState.storeKey =
+            publicConfig.storeKey || appState.storeKey;
+
           appState.pickupStartDate =
             publicConfig.pickupStartDate ||
             "受取日時は店舗からご案内いたします。";
@@ -372,16 +377,21 @@
           appState.reservationOpen =
             publicConfig.reservationOpen !== false;
 
-          appState.products = publicConfig.products || [];
+          appState.products =
+            publicConfig.products || [];
 
-          document.getElementById("pickupStartDateText").textContent =
-            appState.pickupStartDate;
+          document.getElementById(
+            "pickupStartDateText"
+          ).textContent = appState.pickupStartDate;
 
           if (!appState.reservationOpen) {
-            document.getElementById("statusBox").className =
-              "status warning";
+            document.getElementById(
+              "statusBox"
+            ).className = "status warning";
 
-            document.getElementById("statusBox").textContent =
+            document.getElementById(
+              "statusBox"
+            ).textContent =
               "現在、予約受付は終了しています。";
 
             document
@@ -392,24 +402,30 @@
           }
 
           if (appState.products.length === 0) {
-            showError("現在、表示できる商品がありません。");
+            showError(
+              "現在、表示できる商品がありません。"
+            );
             return;
           }
 
           await initializeLiff();
 
         } catch (error) {
-          showError(error.message || String(error));
+          showError(
+            error.message || String(error)
+          );
         }
       }
 
       async function initializeLiff() {
-        var statusBox = document.getElementById("statusBox");
+        var statusBox =
+          document.getElementById("statusBox");
 
         try {
           if (
             !CONFIG.liffId ||
-            CONFIG.liffId === "ここにLIFF_IDを入れる"
+            CONFIG.liffId ===
+              "ここにLIFF_IDを入れる"
           ) {
             statusBox.className = "status error";
             statusBox.textContent =
@@ -443,7 +459,8 @@
           }
 
           try {
-            lineProfile = await liff.getProfile();
+            lineProfile =
+              await liff.getProfile();
           } catch (profileError) {
             lineProfile = null;
           }
@@ -459,7 +476,9 @@
         } catch (error) {
           showError(
             "ご予約フォームを開けませんでした。<br>" +
-            escapeHtml(error.message || String(error))
+            escapeHtml(
+              error.message || String(error)
+            )
           );
         }
       }
@@ -483,17 +502,26 @@
             "jsonpCallback_" +
             Date.now() +
             "_" +
-            Math.floor(Math.random() * 100000);
+            Math.floor(
+              Math.random() * 100000
+            );
 
-          var script = document.createElement("script");
+          var script =
+            document.createElement("script");
 
           window[callbackName] = function(data) {
-            cleanupJsonp(script, callbackName);
+            cleanupJsonp(
+              script,
+              callbackName
+            );
             resolve(data);
           };
 
           script.onerror = function() {
-            cleanupJsonp(script, callbackName);
+            cleanupJsonp(
+              script,
+              callbackName
+            );
 
             reject(
               new Error(
@@ -521,10 +549,18 @@
         });
       }
 
-      function cleanupJsonp(script, callbackName) {
+      function cleanupJsonp(
+        script,
+        callbackName
+      ) {
         try {
-          if (script && script.parentNode) {
-            script.parentNode.removeChild(script);
+          if (
+            script &&
+            script.parentNode
+          ) {
+            script.parentNode.removeChild(
+              script
+            );
           }
         } catch (e) {}
 
@@ -537,41 +573,60 @@
 
       function getStoreKeyFromUrl() {
         var params =
-          new URLSearchParams(window.location.search);
+          new URLSearchParams(
+            window.location.search
+          );
 
-        var directStore = params.get("store");
+        var directStore =
+          params.get("store");
 
         if (directStore) {
-          return normalizeStoreKey(directStore);
+          return normalizeStoreKey(
+            directStore
+          );
         }
 
-        var liffState = params.get("liff.state");
+        var liffState =
+          params.get("liff.state");
 
         if (liffState) {
-          var stateText = decodeURIComponent(liffState);
+          var stateText =
+            decodeURIComponent(liffState);
+
           var queryText = "";
 
-          if (stateText.indexOf("?") === 0) {
-            queryText = stateText.substring(1);
-          } else if (stateText.indexOf("?") !== -1) {
-            queryText = stateText.split("?")[1];
+          if (
+            stateText.indexOf("?") === 0
+          ) {
+            queryText =
+              stateText.substring(1);
+          } else if (
+            stateText.indexOf("?") !== -1
+          ) {
+            queryText =
+              stateText.split("?")[1];
           }
 
           if (queryText) {
             var stateParams =
-              new URLSearchParams(queryText);
+              new URLSearchParams(
+                queryText
+              );
 
             var stateStore =
               stateParams.get("store");
 
             if (stateStore) {
-              return normalizeStoreKey(stateStore);
+              return normalizeStoreKey(
+                stateStore
+              );
             }
           }
         }
 
         return normalizeStoreKey(
-          CONFIG.defaultStoreKey || "ofuna"
+          CONFIG.defaultStoreKey ||
+          "ofuna"
         );
       }
 
@@ -583,7 +638,9 @@
 
       function renderProducts() {
         var productList =
-          document.getElementById("productList");
+          document.getElementById(
+            "productList"
+          );
 
         var html = "";
 
@@ -592,17 +649,25 @@
           i < appState.products.length;
           i++
         ) {
-          var product = appState.products[i];
-          var detailId = "productDetail_" + i;
+          var product =
+            appState.products[i];
 
-          html += '<div class="product">';
+          var detailId =
+            "productDetail_" + i;
+
+          html +=
+            '<div class="product">';
 
           if (product.imageUrl) {
             html +=
               '<img class="product-image" src="' +
-              escapeAttribute(product.imageUrl) +
+              escapeAttribute(
+                product.imageUrl
+              ) +
               '" alt="' +
-              escapeAttribute(product.name) +
+              escapeAttribute(
+                product.name
+              ) +
               '" onerror="this.style.display=\'none\';">';
           }
 
@@ -614,21 +679,29 @@
             formatYen(product.price) +
             "</div>";
 
-          if (product.shortDescription) {
+          if (
+            product.shortDescription
+          ) {
             html +=
               '<div class="product-short">' +
-              escapeHtml(product.shortDescription) +
+              escapeHtml(
+                product.shortDescription
+              ) +
               "</div>";
           }
 
           if (product.recommendedUse) {
             html +=
               '<div class="product-use">おすすめ：' +
-              escapeHtml(product.recommendedUse) +
+              escapeHtml(
+                product.recommendedUse
+              ) +
               "</div>";
           }
 
-          if (product.detailDescription) {
+          if (
+            product.detailDescription
+          ) {
             html +=
               '<button class="detail-button" type="button" onclick="toggleProductDetail(\'' +
               detailId +
@@ -636,7 +709,9 @@
               '<div id="' +
               detailId +
               '" class="product-detail">' +
-              escapeHtml(product.detailDescription) +
+              escapeHtml(
+                product.detailDescription
+              ) +
               "</div>";
           }
 
@@ -658,15 +733,20 @@
               "個</option>";
           }
 
-          html += "</select></div>";
+          html +=
+            "</select></div>";
         }
 
         productList.innerHTML = html;
       }
 
-      function toggleProductDetail(detailId) {
+      function toggleProductDetail(
+        detailId
+      ) {
         var detail =
-          document.getElementById(detailId);
+          document.getElementById(
+            detailId
+          );
 
         if (!detail) {
           return;
@@ -680,9 +760,13 @@
 
       function getSelectedProducts() {
         var form =
-          document.getElementById("reservationForm");
+          document.getElementById(
+            "reservationForm"
+          );
 
-        var formData = new FormData(form);
+        var formData =
+          new FormData(form);
+
         var selectedProducts = [];
 
         for (
@@ -691,17 +775,25 @@
           i++
         ) {
           var qty =
-            Number(formData.get("qty_" + i)) || 0;
+            Number(
+              formData.get(
+                "qty_" + i
+              )
+            ) || 0;
 
           if (qty > 0) {
             selectedProducts.push({
-              name: appState.products[i].name,
+              name:
+                appState.products[i].name,
               qty: qty,
               price:
-                Number(appState.products[i].price) || 0,
+                Number(
+                  appState.products[i].price
+                ) || 0,
               subtotal:
-                (Number(appState.products[i].price) ||
-                  0) * qty
+                (Number(
+                  appState.products[i].price
+                ) || 0) * qty
             });
           }
         }
@@ -710,7 +802,9 @@
       }
 
       function updateLiveTotal() {
-        var products = getSelectedProducts();
+        var products =
+          getSelectedProducts();
+
         var totalAmount = 0;
         var detailLines = [];
 
@@ -719,46 +813,66 @@
           i < products.length;
           i++
         ) {
-          totalAmount += products[i].subtotal;
+          totalAmount +=
+            products[i].subtotal;
 
           detailLines.push(
             products[i].name +
               " × " +
               products[i].qty +
               "個　" +
-              formatYen(products[i].subtotal)
+              formatYen(
+                products[i].subtotal
+              )
           );
         }
 
         document.getElementById(
           "totalAmountDisplay"
         ).textContent =
-          "合計金額：" + formatYen(totalAmount);
+          "合計金額：" +
+          formatYen(totalAmount);
 
         document.getElementById(
           "totalDetailDisplay"
-        ).textContent = detailLines.join("\n");
+        ).textContent =
+          detailLines.join("\n");
       }
 
       async function sendReservation() {
         var form =
-          document.getElementById("reservationForm");
+          document.getElementById(
+            "reservationForm"
+          );
 
-        var formData = new FormData(form);
+        var formData =
+          new FormData(form);
 
         var customerName =
-          trimText(formData.get("customerName"));
+          trimText(
+            formData.get("customerName")
+          );
 
         var phone =
-          trimText(formData.get("phone"));
+          trimText(
+            formData.get("phone")
+          );
 
         var address =
-          trimText(formData.get("address"));
+          trimText(
+            formData.get("address")
+          );
 
         var note =
-          trimText(formData.get("note") || "");
+          trimText(
+            formData.get("note") || ""
+          );
 
-        if (!customerName || !phone || !address) {
+        if (
+          !customerName ||
+          !phone ||
+          !address
+        ) {
           alert(
             "お客様名・電話番号・住所を入力してください。"
           );
@@ -766,26 +880,35 @@
         }
 
         if (customerName.length > 50) {
-          alert("お客様名が長すぎます。");
+          alert(
+            "お客様名が長すぎます。"
+          );
           return;
         }
 
         if (phone.length > 20) {
-          alert("電話番号が長すぎます。");
+          alert(
+            "電話番号が長すぎます。"
+          );
           return;
         }
 
         if (address.length > 200) {
-          alert("住所が長すぎます。");
+          alert(
+            "住所が長すぎます。"
+          );
           return;
         }
 
         if (note.length > 300) {
-          alert("備考が長すぎます。");
+          alert(
+            "備考が長すぎます。"
+          );
           return;
         }
 
-        var products = getSelectedProducts();
+        var products =
+          getSelectedProducts();
 
         if (products.length === 0) {
           alert(
@@ -810,19 +933,25 @@
         };
 
         var confirmationText =
-          createReservationText(reservationData);
+          createReservationText(
+            reservationData
+          );
 
         var confirmMessage =
           "以下の内容で予約します。\n\n" +
           confirmationText +
           "\n\nこの内容で送信してよろしいですか？";
 
-        if (!confirm(confirmMessage)) {
+        if (
+          !confirm(confirmMessage)
+        ) {
           return;
         }
 
         var submitButton =
-          document.getElementById("submitButton");
+          document.getElementById(
+            "submitButton"
+          );
 
         submitButton.disabled = true;
         submitButton.textContent =
@@ -842,13 +971,18 @@
             reservationData
           );
 
-          showCompleteMessage(confirmationText);
+          showCompleteMessage(
+            confirmationText
+          );
 
         } catch (error) {
           alert(
             "送信または保存に失敗しました。\n\n" +
             "エラー内容：\n" +
-            (error.message || String(error))
+            (
+              error.message ||
+              String(error)
+            )
           );
 
           submitButton.disabled = false;
@@ -857,7 +991,9 @@
         }
       }
 
-      async function saveReservationToGoogle(data) {
+      async function saveReservationToGoogle(
+        data
+      ) {
         if (
           !CONFIG.gasApiUrl ||
           CONFIG.gasApiUrl ===
@@ -872,7 +1008,8 @@
 
         try {
           if (
-            typeof liff.getIDToken === "function"
+            typeof liff.getIDToken ===
+            "function"
           ) {
             idToken =
               liff.getIDToken() || "";
@@ -883,7 +1020,8 @@
 
         var payload = {
           action: "saveReservation",
-          storeKey: appState.storeKey,
+          storeKey:
+            appState.storeKey,
           lineUserId:
             lineProfile
               ? lineProfile.userId || ""
@@ -893,25 +1031,32 @@
               ? lineProfile.displayName || ""
               : "",
           idToken: idToken,
-          customerName: data.customerName,
+          customerName:
+            data.customerName,
           phone: data.phone,
           address: data.address,
           products: data.products,
           note: data.note || ""
         };
 
-        await fetch(CONFIG.gasApiUrl, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type":
-              "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify(payload)
-        });
+        await fetch(
+          CONFIG.gasApiUrl,
+          {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type":
+                "text/plain;charset=utf-8"
+            },
+            body:
+              JSON.stringify(payload)
+          }
+        );
       }
 
-      function createReservationText(data) {
+      function createReservationText(
+        data
+      ) {
         var productLines = [];
         var totalAmount = 0;
 
@@ -920,16 +1065,20 @@
           i < data.products.length;
           i++
         ) {
-          var item = data.products[i];
+          var item =
+            data.products[i];
 
-          totalAmount += item.subtotal;
+          totalAmount +=
+            item.subtotal;
 
           productLines.push(
             item.name +
               " × " +
               item.qty +
               "個　" +
-              formatYen(item.subtotal)
+              formatYen(
+                item.subtotal
+              )
           );
         }
 
@@ -960,7 +1109,9 @@
         );
       }
 
-      function createReservationFlexMessage(data) {
+      function createReservationFlexMessage(
+        data
+      ) {
         var totalAmount = 0;
         var productContents = [];
 
@@ -969,9 +1120,11 @@
           i < data.products.length;
           i++
         ) {
-          var item = data.products[i];
+          var item =
+            data.products[i];
 
-          totalAmount += item.subtotal;
+          totalAmount +=
+            item.subtotal;
 
           productContents.push({
             type: "box",
@@ -991,7 +1144,9 @@
                 text:
                   item.qty +
                   "個　" +
-                  formatYen(item.subtotal),
+                  formatYen(
+                    item.subtotal
+                  ),
                 size: "sm",
                 color: "#666666",
                 margin: "xs",
@@ -1081,7 +1236,8 @@
               },
               {
                 type: "text",
-                text: formatYen(totalAmount),
+                text:
+                  formatYen(totalAmount),
                 size: "lg",
                 weight: "bold",
                 color: "#8A5A00",
@@ -1104,14 +1260,16 @@
             contents: [
               {
                 type: "text",
-                text: "お受け取り日時",
+                text:
+                  "お受け取り日時",
                 size: "sm",
                 weight: "bold",
                 color: "#2F5D3A"
               },
               {
                 type: "text",
-                text: appState.pickupStartDate,
+                text:
+                  appState.pickupStartDate,
                 size: "sm",
                 color: "#333333",
                 margin: "sm",
@@ -1132,8 +1290,13 @@
 
         return {
           type: "flex",
-          altText:
-            "川根園 茶葉のご予約内容を送信しました。",
+
+          /*
+           * LINE公式アカウントの
+           * キーワード応答で使用する固定文字
+           */
+          altText: "【茶葉予約】",
+
           contents: {
             type: "bubble",
             size: "mega",
@@ -1148,7 +1311,10 @@
         };
       }
 
-      function createFlexField(label, value) {
+      function createFlexField(
+        label,
+        value
+      ) {
         return {
           type: "box",
           layout: "vertical",
@@ -1162,7 +1328,8 @@
             },
             {
               type: "text",
-              text: String(value || ""),
+              text:
+                String(value || ""),
               size: "sm",
               color: "#333333",
               margin: "xs",
@@ -1176,13 +1343,17 @@
         confirmationText
       ) {
         var card =
-          document.getElementById("mainCard");
+          document.getElementById(
+            "mainCard"
+          );
 
         card.innerHTML =
           "<h1>ご予約ありがとうございます</h1>" +
           "<p class='lead'>予約内容をLINEトークに送信しました。</p>" +
           "<pre>" +
-          escapeHtml(confirmationText) +
+          escapeHtml(
+            confirmationText
+          ) +
           "</pre>" +
           "<p class='small'>LINEトーク画面に戻り、予約内容が表示されているかご確認ください。</p>" +
           "<button type='button' onclick='closeLiffWindow()'>LINEトークに戻る</button>";
@@ -1190,7 +1361,8 @@
 
       function closeLiffWindow() {
         if (
-          typeof liff !== "undefined" &&
+          typeof liff !==
+            "undefined" &&
           liff.isInClient()
         ) {
           liff.closeWindow();
@@ -1199,22 +1371,31 @@
 
       function showError(message) {
         var statusBox =
-          document.getElementById("statusBox");
+          document.getElementById(
+            "statusBox"
+          );
 
-        statusBox.className = "status error";
-        statusBox.innerHTML = message;
+        statusBox.className =
+          "status error";
+
+        statusBox.innerHTML =
+          message;
       }
 
       function formatYen(amount) {
         return (
-          Number(amount || 0).toLocaleString(
+          Number(
+            amount || 0
+          ).toLocaleString(
             "ja-JP"
           ) + "円"
         );
       }
 
       function trimText(value) {
-        return String(value || "").replace(
+        return String(
+          value || ""
+        ).replace(
           /^\s+|\s+$/g,
           ""
         );
@@ -1230,7 +1411,9 @@
       }
 
       function escapeAttribute(text) {
-        return escapeHtml(text).replace(
+        return escapeHtml(
+          text
+        ).replace(
           /`/g,
           "&#096;"
         );
