@@ -366,18 +366,28 @@
 
           appState.storeKey = publicConfig.storeKey || appState.storeKey;
           appState.pickupStartDate =
-            publicConfig.pickupStartDate || "受取日時は店舗からご案内いたします。";
-          appState.reservationOpen = publicConfig.reservationOpen !== false;
+            publicConfig.pickupStartDate ||
+            "受取日時は店舗からご案内いたします。";
+
+          appState.reservationOpen =
+            publicConfig.reservationOpen !== false;
+
           appState.products = publicConfig.products || [];
 
           document.getElementById("pickupStartDateText").textContent =
             appState.pickupStartDate;
 
           if (!appState.reservationOpen) {
-            document.getElementById("statusBox").className = "status warning";
+            document.getElementById("statusBox").className =
+              "status warning";
+
             document.getElementById("statusBox").textContent =
               "現在、予約受付は終了しています。";
-            document.getElementById("closedArea").classList.remove("hidden");
+
+            document
+              .getElementById("closedArea")
+              .classList.remove("hidden");
+
             return;
           }
 
@@ -397,7 +407,10 @@
         var statusBox = document.getElementById("statusBox");
 
         try {
-          if (!CONFIG.liffId || CONFIG.liffId === "ここにLIFF_IDを入れる") {
+          if (
+            !CONFIG.liffId ||
+            CONFIG.liffId === "ここにLIFF_IDを入れる"
+          ) {
             statusBox.className = "status error";
             statusBox.textContent =
               "フォーム設定を確認できませんでした。";
@@ -410,11 +423,13 @@
 
           if (!liff.isLoggedIn()) {
             statusBox.className = "status";
-            statusBox.textContent = "ご予約フォームを開いています...";
+            statusBox.textContent =
+              "ご予約フォームを開いています...";
 
             liff.login({
               redirectUri: window.location.href
             });
+
             return;
           }
 
@@ -434,7 +449,11 @@
           }
 
           renderProducts();
-          document.getElementById("formArea").classList.remove("hidden");
+
+          document
+            .getElementById("formArea")
+            .classList.remove("hidden");
+
           updateLiveTotal();
 
         } catch (error) {
@@ -449,9 +468,14 @@
         return new Promise(function(resolve, reject) {
           if (
             !CONFIG.gasApiUrl ||
-            CONFIG.gasApiUrl === "ここにGAS_WEBアプリURLを入れる"
+            CONFIG.gasApiUrl ===
+              "ここにGAS_WEBアプリURLを入れる"
           ) {
-            reject(new Error("予約フォームの設定が完了していません。"));
+            reject(
+              new Error(
+                "予約フォームの設定が完了していません。"
+              )
+            );
             return;
           }
 
@@ -470,6 +494,7 @@
 
           script.onerror = function() {
             cleanupJsonp(script, callbackName);
+
             reject(
               new Error(
                 "商品情報を取得できませんでした。時間をおいて再度お試しください。"
@@ -478,7 +503,9 @@
           };
 
           var separator =
-            CONFIG.gasApiUrl.indexOf("?") === -1 ? "?" : "&";
+            CONFIG.gasApiUrl.indexOf("?") === -1
+              ? "?"
+              : "&";
 
           script.src =
             CONFIG.gasApiUrl +
@@ -509,7 +536,8 @@
       }
 
       function getStoreKeyFromUrl() {
-        var params = new URLSearchParams(window.location.search);
+        var params =
+          new URLSearchParams(window.location.search);
 
         var directStore = params.get("store");
 
@@ -530,8 +558,11 @@
           }
 
           if (queryText) {
-            var stateParams = new URLSearchParams(queryText);
-            var stateStore = stateParams.get("store");
+            var stateParams =
+              new URLSearchParams(queryText);
+
+            var stateStore =
+              stateParams.get("store");
 
             if (stateStore) {
               return normalizeStoreKey(stateStore);
@@ -539,7 +570,9 @@
           }
         }
 
-        return normalizeStoreKey(CONFIG.defaultStoreKey || "ofuna");
+        return normalizeStoreKey(
+          CONFIG.defaultStoreKey || "ofuna"
+        );
       }
 
       function normalizeStoreKey(value) {
@@ -549,10 +582,16 @@
       }
 
       function renderProducts() {
-        var productList = document.getElementById("productList");
+        var productList =
+          document.getElementById("productList");
+
         var html = "";
 
-        for (var i = 0; i < appState.products.length; i++) {
+        for (
+          var i = 0;
+          i < appState.products.length;
+          i++
+        ) {
           var product = appState.products[i];
           var detailId = "productDetail_" + i;
 
@@ -601,10 +640,22 @@
               "</div>";
           }
 
-          html += '<select name="qty_' + i + '" onchange="updateLiveTotal()">';
+          html +=
+            '<select name="qty_' +
+            i +
+            '" onchange="updateLiveTotal()">';
 
-          for (var q = 0; q <= product.maxQty; q++) {
-            html += '<option value="' + q + '">' + q + "個</option>";
+          for (
+            var q = 0;
+            q <= product.maxQty;
+            q++
+          ) {
+            html +=
+              '<option value="' +
+              q +
+              '">' +
+              q +
+              "個</option>";
           }
 
           html += "</select></div>";
@@ -614,30 +665,43 @@
       }
 
       function toggleProductDetail(detailId) {
-        var detail = document.getElementById(detailId);
+        var detail =
+          document.getElementById(detailId);
 
         if (!detail) {
           return;
         }
 
         detail.style.display =
-          detail.style.display === "block" ? "none" : "block";
+          detail.style.display === "block"
+            ? "none"
+            : "block";
       }
 
       function getSelectedProducts() {
-        var form = document.getElementById("reservationForm");
+        var form =
+          document.getElementById("reservationForm");
+
         var formData = new FormData(form);
         var selectedProducts = [];
 
-        for (var i = 0; i < appState.products.length; i++) {
-          var qty = Number(formData.get("qty_" + i)) || 0;
+        for (
+          var i = 0;
+          i < appState.products.length;
+          i++
+        ) {
+          var qty =
+            Number(formData.get("qty_" + i)) || 0;
 
           if (qty > 0) {
             selectedProducts.push({
               name: appState.products[i].name,
               qty: qty,
-              price: Number(appState.products[i].price) || 0,
-              subtotal: (Number(appState.products[i].price) || 0) * qty
+              price:
+                Number(appState.products[i].price) || 0,
+              subtotal:
+                (Number(appState.products[i].price) ||
+                  0) * qty
             });
           }
         }
@@ -650,7 +714,11 @@
         var totalAmount = 0;
         var detailLines = [];
 
-        for (var i = 0; i < products.length; i++) {
+        for (
+          var i = 0;
+          i < products.length;
+          i++
+        ) {
           totalAmount += products[i].subtotal;
 
           detailLines.push(
@@ -662,24 +730,38 @@
           );
         }
 
-        document.getElementById("totalAmountDisplay").textContent =
+        document.getElementById(
+          "totalAmountDisplay"
+        ).textContent =
           "合計金額：" + formatYen(totalAmount);
 
-        document.getElementById("totalDetailDisplay").textContent =
-          detailLines.join("\n");
+        document.getElementById(
+          "totalDetailDisplay"
+        ).textContent = detailLines.join("\n");
       }
 
       async function sendReservation() {
-        var form = document.getElementById("reservationForm");
+        var form =
+          document.getElementById("reservationForm");
+
         var formData = new FormData(form);
 
-        var customerName = trimText(formData.get("customerName"));
-        var phone = trimText(formData.get("phone"));
-        var address = trimText(formData.get("address"));
-        var note = trimText(formData.get("note") || "");
+        var customerName =
+          trimText(formData.get("customerName"));
+
+        var phone =
+          trimText(formData.get("phone"));
+
+        var address =
+          trimText(formData.get("address"));
+
+        var note =
+          trimText(formData.get("note") || "");
 
         if (!customerName || !phone || !address) {
-          alert("お客様名・電話番号・住所を入力してください。");
+          alert(
+            "お客様名・電話番号・住所を入力してください。"
+          );
           return;
         }
 
@@ -706,54 +788,61 @@
         var products = getSelectedProducts();
 
         if (products.length === 0) {
-          alert("商品を1つ以上選択してください。");
+          alert(
+            "商品を1つ以上選択してください。"
+          );
           return;
         }
 
         if (!liff.isInClient()) {
-          alert("LINEトークに送信するには、LINEアプリ内で開いてください。");
+          alert(
+            "LINEトークに送信するには、LINEアプリ内で開いてください。"
+          );
           return;
         }
 
-        var messageText = createReservationMessage({
+        var reservationData = {
           customerName: customerName,
           phone: phone,
           address: address,
           products: products,
           note: note
-        });
+        };
+
+        var confirmationText =
+          createReservationText(reservationData);
 
         var confirmMessage =
           "以下の内容で予約します。\n\n" +
-          messageText +
+          confirmationText +
           "\n\nこの内容で送信してよろしいですか？";
 
         if (!confirm(confirmMessage)) {
           return;
         }
 
-        var submitButton = document.getElementById("submitButton");
+        var submitButton =
+          document.getElementById("submitButton");
 
         submitButton.disabled = true;
-        submitButton.textContent = "予約を送信しています...";
+        submitButton.textContent =
+          "予約を送信しています...";
 
         try {
+          var flexMessage =
+            createReservationFlexMessage(
+              reservationData
+            );
+
           await liff.sendMessages([
-            {
-              type: "text",
-              text: messageText
-            }
+            flexMessage
           ]);
 
-          await saveReservationToGoogle({
-            customerName: customerName,
-            phone: phone,
-            address: address,
-            products: products,
-            note: note
-          });
+          await saveReservationToGoogle(
+            reservationData
+          );
 
-          showCompleteMessage(messageText);
+          showCompleteMessage(confirmationText);
 
         } catch (error) {
           alert(
@@ -763,23 +852,30 @@
           );
 
           submitButton.disabled = false;
-          submitButton.textContent = "この内容で予約する";
+          submitButton.textContent =
+            "この内容で予約する";
         }
       }
 
       async function saveReservationToGoogle(data) {
         if (
           !CONFIG.gasApiUrl ||
-          CONFIG.gasApiUrl === "ここにGAS_WEBアプリURLを入れる"
+          CONFIG.gasApiUrl ===
+            "ここにGAS_WEBアプリURLを入れる"
         ) {
-          throw new Error("予約フォームの設定が完了していません。");
+          throw new Error(
+            "予約フォームの設定が完了していません。"
+          );
         }
 
         var idToken = "";
 
         try {
-          if (typeof liff.getIDToken === "function") {
-            idToken = liff.getIDToken() || "";
+          if (
+            typeof liff.getIDToken === "function"
+          ) {
+            idToken =
+              liff.getIDToken() || "";
           }
         } catch (e) {
           idToken = "";
@@ -788,8 +884,14 @@
         var payload = {
           action: "saveReservation",
           storeKey: appState.storeKey,
-          lineUserId: lineProfile ? lineProfile.userId || "" : "",
-          lineDisplayName: lineProfile ? lineProfile.displayName || "" : "",
+          lineUserId:
+            lineProfile
+              ? lineProfile.userId || ""
+              : "",
+          lineDisplayName:
+            lineProfile
+              ? lineProfile.displayName || ""
+              : "",
           idToken: idToken,
           customerName: data.customerName,
           phone: data.phone,
@@ -802,17 +904,22 @@
           method: "POST",
           mode: "no-cors",
           headers: {
-            "Content-Type": "text/plain;charset=utf-8"
+            "Content-Type":
+              "text/plain;charset=utf-8"
           },
           body: JSON.stringify(payload)
         });
       }
 
-      function createReservationMessage(data) {
+      function createReservationText(data) {
         var productLines = [];
         var totalAmount = 0;
 
-        for (var i = 0; i < data.products.length; i++) {
+        for (
+          var i = 0;
+          i < data.products.length;
+          i++
+        ) {
           var item = data.products[i];
 
           totalAmount += item.subtotal;
@@ -853,38 +960,264 @@
         );
       }
 
-      function showCompleteMessage(messageText) {
-        var card = document.getElementById("mainCard");
+      function createReservationFlexMessage(data) {
+        var totalAmount = 0;
+        var productContents = [];
+
+        for (
+          var i = 0;
+          i < data.products.length;
+          i++
+        ) {
+          var item = data.products[i];
+
+          totalAmount += item.subtotal;
+
+          productContents.push({
+            type: "box",
+            layout: "vertical",
+            margin: "md",
+            contents: [
+              {
+                type: "text",
+                text: item.name,
+                size: "sm",
+                weight: "bold",
+                color: "#333333",
+                wrap: true
+              },
+              {
+                type: "text",
+                text:
+                  item.qty +
+                  "個　" +
+                  formatYen(item.subtotal),
+                size: "sm",
+                color: "#666666",
+                margin: "xs",
+                wrap: true
+              }
+            ]
+          });
+        }
+
+        var bodyContents = [
+          {
+            type: "text",
+            text: "川根園",
+            size: "sm",
+            color: "#2F5D3A",
+            weight: "bold"
+          },
+          {
+            type: "text",
+            text: "茶葉ご予約内容",
+            size: "xl",
+            weight: "bold",
+            color: "#2F5D3A",
+            margin: "sm",
+            wrap: true
+          },
+          {
+            type: "separator",
+            margin: "lg",
+            color: "#DDE7DA"
+          },
+          createFlexField(
+            "お名前",
+            data.customerName + " 様"
+          ),
+          createFlexField(
+            "電話番号",
+            data.phone
+          ),
+          createFlexField(
+            "住所",
+            data.address
+          ),
+          {
+            type: "separator",
+            margin: "lg",
+            color: "#DDE7DA"
+          },
+          {
+            type: "text",
+            text: "ご予約商品",
+            size: "sm",
+            weight: "bold",
+            color: "#2F5D3A",
+            margin: "lg"
+          }
+        ];
+
+        for (
+          var j = 0;
+          j < productContents.length;
+          j++
+        ) {
+          bodyContents.push(
+            productContents[j]
+          );
+        }
+
+        bodyContents.push(
+          {
+            type: "separator",
+            margin: "lg",
+            color: "#DDE7DA"
+          },
+          {
+            type: "box",
+            layout: "horizontal",
+            margin: "lg",
+            contents: [
+              {
+                type: "text",
+                text: "合計金額",
+                size: "md",
+                weight: "bold",
+                color: "#333333",
+                flex: 1
+              },
+              {
+                type: "text",
+                text: formatYen(totalAmount),
+                size: "lg",
+                weight: "bold",
+                color: "#8A5A00",
+                align: "end",
+                flex: 2
+              }
+            ]
+          },
+          createFlexField(
+            "備考",
+            data.note || "なし"
+          ),
+          {
+            type: "box",
+            layout: "vertical",
+            margin: "lg",
+            paddingAll: "12px",
+            backgroundColor: "#F1F7EF",
+            cornerRadius: "8px",
+            contents: [
+              {
+                type: "text",
+                text: "お受け取り日時",
+                size: "sm",
+                weight: "bold",
+                color: "#2F5D3A"
+              },
+              {
+                type: "text",
+                text: appState.pickupStartDate,
+                size: "sm",
+                color: "#333333",
+                margin: "sm",
+                wrap: true
+              },
+              {
+                type: "text",
+                text:
+                  "ご来店の際は、お名前をスタッフにお伝えください。",
+                size: "xs",
+                color: "#666666",
+                margin: "sm",
+                wrap: true
+              }
+            ]
+          }
+        );
+
+        return {
+          type: "flex",
+          altText:
+            "川根園 茶葉のご予約内容を送信しました。",
+          contents: {
+            type: "bubble",
+            size: "mega",
+            body: {
+              type: "box",
+              layout: "vertical",
+              spacing: "sm",
+              paddingAll: "20px",
+              contents: bodyContents
+            }
+          }
+        };
+      }
+
+      function createFlexField(label, value) {
+        return {
+          type: "box",
+          layout: "vertical",
+          margin: "md",
+          contents: [
+            {
+              type: "text",
+              text: label,
+              size: "xs",
+              color: "#777777"
+            },
+            {
+              type: "text",
+              text: String(value || ""),
+              size: "sm",
+              color: "#333333",
+              margin: "xs",
+              wrap: true
+            }
+          ]
+        };
+      }
+
+      function showCompleteMessage(
+        confirmationText
+      ) {
+        var card =
+          document.getElementById("mainCard");
 
         card.innerHTML =
           "<h1>ご予約ありがとうございます</h1>" +
-          "<p class='lead'>以下の内容をLINEトークに送信しました。</p>" +
+          "<p class='lead'>予約内容をLINEトークに送信しました。</p>" +
           "<pre>" +
-          escapeHtml(messageText) +
+          escapeHtml(confirmationText) +
           "</pre>" +
           "<p class='small'>LINEトーク画面に戻り、予約内容が表示されているかご確認ください。</p>" +
           "<button type='button' onclick='closeLiffWindow()'>LINEトークに戻る</button>";
       }
 
       function closeLiffWindow() {
-        if (typeof liff !== "undefined" && liff.isInClient()) {
+        if (
+          typeof liff !== "undefined" &&
+          liff.isInClient()
+        ) {
           liff.closeWindow();
         }
       }
 
       function showError(message) {
-        var statusBox = document.getElementById("statusBox");
+        var statusBox =
+          document.getElementById("statusBox");
 
         statusBox.className = "status error";
         statusBox.innerHTML = message;
       }
 
       function formatYen(amount) {
-        return Number(amount || 0).toLocaleString("ja-JP") + "円";
+        return (
+          Number(amount || 0).toLocaleString(
+            "ja-JP"
+          ) + "円"
+        );
       }
 
       function trimText(value) {
-        return String(value || "").replace(/^\s+|\s+$/g, "");
+        return String(value || "").replace(
+          /^\s+|\s+$/g,
+          ""
+        );
       }
 
       function escapeHtml(text) {
@@ -897,7 +1230,10 @@
       }
 
       function escapeAttribute(text) {
-        return escapeHtml(text).replace(/`/g, "&#096;");
+        return escapeHtml(text).replace(
+          /`/g,
+          "&#096;"
+        );
       }
     </script>
   </body>
