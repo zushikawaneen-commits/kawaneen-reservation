@@ -83,6 +83,13 @@
         resize: vertical;
       }
 
+      .field-help {
+        margin: 6px 0 0;
+        font-size: 12px;
+        line-height: 1.6;
+        color: #666;
+      }
+
       .product {
         border: 1px solid #e0ddd2;
         border-radius: 12px;
@@ -155,7 +162,7 @@
         border-radius: 10px;
         background: #f1f7ef;
         font-size: 13px;
-        line-height: 1.6;
+        line-height: 1.7;
       }
 
       .closed-box {
@@ -209,7 +216,7 @@
       }
 
       .hidden {
-        display: none;
+        display: none !important;
       }
 
       pre {
@@ -229,7 +236,7 @@
         <h1 id="pageTitle">川根園 茶葉ご予約フォーム</h1>
 
         <div id="statusBox" class="status">
-          商品情報とLINE連携を確認しています...
+          ご予約フォームを開いています...
         </div>
 
         <div id="closedArea" class="hidden">
@@ -254,8 +261,8 @@
           </p>
 
           <div class="notice">
-            <strong>お受け取りについて</strong><br>
-            ご予約商品は <span id="pickupStartDateText"></span> 以降にご来店ください。<br>
+            <strong>お受け取り日時</strong><br>
+            <span id="pickupStartDateText"></span><br>
             ご来店の際は、お名前をスタッフにお伝えください。
           </div>
 
@@ -295,12 +302,16 @@
               required
             ></textarea>
 
-            <label for="note">備考</label>
+            <label for="note">備考（のし・包装など）</label>
             <textarea
               id="note"
               name="note"
-              placeholder="ご連絡事項などがございましたらご入力ください。"
+              placeholder="のし・包装などのご希望がございましたらご記入ください。"
             ></textarea>
+
+            <p class="field-help">
+              のしの種類、お名前、包装方法など、ご希望がございましたらご記入ください。
+            </p>
 
             <div class="notice">
               送信すると、予約内容がお客様のLINEトークに送信されます。<br>
@@ -354,7 +365,8 @@
           }
 
           appState.storeKey = publicConfig.storeKey || appState.storeKey;
-          appState.pickupStartDate = publicConfig.pickupStartDate || "指定日";
+          appState.pickupStartDate =
+            publicConfig.pickupStartDate || "受取日時は店舗からご案内いたします。";
           appState.reservationOpen = publicConfig.reservationOpen !== false;
           appState.products = publicConfig.products || [];
 
@@ -363,7 +375,8 @@
 
           if (!appState.reservationOpen) {
             document.getElementById("statusBox").className = "status warning";
-            document.getElementById("statusBox").textContent = "現在、予約受付は終了しています。";
+            document.getElementById("statusBox").textContent =
+              "現在、予約受付は終了しています。";
             document.getElementById("closedArea").classList.remove("hidden");
             return;
           }
@@ -386,7 +399,8 @@
         try {
           if (!CONFIG.liffId || CONFIG.liffId === "ここにLIFF_IDを入れる") {
             statusBox.className = "status error";
-            statusBox.textContent = "LIFF IDが未設定です。index.html内の liffId を設定してください。";
+            statusBox.textContent =
+              "フォーム設定を確認できませんでした。";
             return;
           }
 
@@ -395,8 +409,9 @@
           });
 
           if (!liff.isLoggedIn()) {
-            statusBox.className = "status warning";
-            statusBox.textContent = "LINEログインへ移動します...";
+            statusBox.className = "status";
+            statusBox.textContent = "ご予約フォームを開いています...";
+
             liff.login({
               redirectUri: window.location.href
             });
@@ -409,21 +424,13 @@
               "このページはLINEアプリ内で開いてください。<br>" +
               "外部ブラウザでは、LINEトークへの送信ができない場合があります。";
           } else {
-            statusBox.className = "status";
-            statusBox.textContent = "LINE連携を確認しました。";
+            statusBox.className = "status hidden";
           }
 
           try {
             lineProfile = await liff.getProfile();
-
-            if (lineProfile && lineProfile.displayName) {
-              statusBox.innerHTML =
-                "LINE連携を確認しました。<br>" +
-                "LINE表示名：" + escapeHtml(lineProfile.displayName);
-            }
           } catch (profileError) {
-            statusBox.className = "status warning";
-            statusBox.textContent = "LINEプロフィールは取得できませんでしたが、フォーム入力は可能です。";
+            lineProfile = null;
           }
 
           renderProducts();
@@ -431,14 +438,20 @@
           updateLiveTotal();
 
         } catch (error) {
-          showError("LIFF初期化に失敗しました。<br>" + escapeHtml(error.message || String(error)));
+          showError(
+            "ご予約フォームを開けませんでした。<br>" +
+            escapeHtml(error.message || String(error))
+          );
         }
       }
 
       function loadPublicConfig(storeKey) {
         return new Promise(function(resolve, reject) {
-          if (!CONFIG.gasApiUrl || CONFIG.gasApiUrl === "ここにGAS_WEBアプリURLを入れる") {
-            reject(new Error("GAS API URLが未設定です。index.html内の gasApiUrl を設定してください。"));
+          if (
+            !CONFIG.gasApiUrl ||
+            CONFIG.gasApiUrl === "ここにGAS_WEBアプリURLを入れる"
+          ) {
+            reject(new Error("予約フォームの設定が完了していません。"));
             return;
           }
 
@@ -457,17 +470,25 @@
 
           script.onerror = function() {
             cleanupJsonp(script, callbackName);
-            reject(new Error("商品情報の取得に失敗しました。GASのWebアプリURLを確認してください。"));
+            reject(
+              new Error(
+                "商品情報を取得できませんでした。時間をおいて再度お試しください。"
+              )
+            );
           };
 
-          var separator = CONFIG.gasApiUrl.indexOf("?") === -1 ? "?" : "&";
+          var separator =
+            CONFIG.gasApiUrl.indexOf("?") === -1 ? "?" : "&";
 
           script.src =
             CONFIG.gasApiUrl +
             separator +
-            "store=" + encodeURIComponent(storeKey) +
-            "&callback=" + encodeURIComponent(callbackName) +
-            "&_=" + Date.now();
+            "store=" +
+            encodeURIComponent(storeKey) +
+            "&callback=" +
+            encodeURIComponent(callbackName) +
+            "&_=" +
+            Date.now();
 
           document.body.appendChild(script);
         });
@@ -491,11 +512,13 @@
         var params = new URLSearchParams(window.location.search);
 
         var directStore = params.get("store");
+
         if (directStore) {
           return normalizeStoreKey(directStore);
         }
 
         var liffState = params.get("liff.state");
+
         if (liffState) {
           var stateText = decodeURIComponent(liffState);
           var queryText = "";
@@ -545,21 +568,25 @@
           }
 
           html +=
-            '<div class="product-name">' + escapeHtml(product.name) + '</div>' +
-            '<div class="product-price">価格：' + formatYen(product.price) + '</div>';
+            '<div class="product-name">' +
+            escapeHtml(product.name) +
+            "</div>" +
+            '<div class="product-price">価格：' +
+            formatYen(product.price) +
+            "</div>";
 
           if (product.shortDescription) {
             html +=
               '<div class="product-short">' +
               escapeHtml(product.shortDescription) +
-              '</div>';
+              "</div>";
           }
 
           if (product.recommendedUse) {
             html +=
               '<div class="product-use">おすすめ：' +
               escapeHtml(product.recommendedUse) +
-              '</div>';
+              "</div>";
           }
 
           if (product.detailDescription) {
@@ -571,19 +598,16 @@
               detailId +
               '" class="product-detail">' +
               escapeHtml(product.detailDescription) +
-              '</div>';
+              "</div>";
           }
 
-          html +=
-            '<select name="qty_' + i + '" onchange="updateLiveTotal()">';
+          html += '<select name="qty_' + i + '" onchange="updateLiveTotal()">';
 
           for (var q = 0; q <= product.maxQty; q++) {
-            html += '<option value="' + q + '">' + q + '個</option>';
+            html += '<option value="' + q + '">' + q + "個</option>";
           }
 
-          html +=
-              '</select>' +
-            '</div>';
+          html += "</select></div>";
         }
 
         productList.innerHTML = html;
@@ -596,11 +620,8 @@
           return;
         }
 
-        if (detail.style.display === "block") {
-          detail.style.display = "none";
-        } else {
-          detail.style.display = "block";
-        }
+        detail.style.display =
+          detail.style.display === "block" ? "none" : "block";
       }
 
       function getSelectedProducts() {
@@ -631,12 +652,13 @@
 
         for (var i = 0; i < products.length; i++) {
           totalAmount += products[i].subtotal;
+
           detailLines.push(
             products[i].name +
-            " × " +
-            products[i].qty +
-            "個　" +
-            formatYen(products[i].subtotal)
+              " × " +
+              products[i].qty +
+              "個　" +
+              formatYen(products[i].subtotal)
           );
         }
 
@@ -698,8 +720,7 @@
           phone: phone,
           address: address,
           products: products,
-          note: note,
-          lineDisplayName: lineProfile ? lineProfile.displayName : ""
+          note: note
         });
 
         var confirmMessage =
@@ -712,8 +733,9 @@
         }
 
         var submitButton = document.getElementById("submitButton");
+
         submitButton.disabled = true;
-        submitButton.textContent = "LINE送信・保存中...";
+        submitButton.textContent = "予約を送信しています...";
 
         try {
           await liff.sendMessages([
@@ -746,8 +768,11 @@
       }
 
       async function saveReservationToGoogle(data) {
-        if (!CONFIG.gasApiUrl || CONFIG.gasApiUrl === "ここにGAS_WEBアプリURLを入れる") {
-          throw new Error("GAS API URLが未設定です。");
+        if (
+          !CONFIG.gasApiUrl ||
+          CONFIG.gasApiUrl === "ここにGAS_WEBアプリURLを入れる"
+        ) {
+          throw new Error("予約フォームの設定が完了していません。");
         }
 
         var idToken = "";
@@ -789,34 +814,43 @@
 
         for (var i = 0; i < data.products.length; i++) {
           var item = data.products[i];
+
           totalAmount += item.subtotal;
 
           productLines.push(
             item.name +
-            " × " +
-            item.qty +
-            "個　" +
-            formatYen(item.subtotal)
+              " × " +
+              item.qty +
+              "個　" +
+              formatYen(item.subtotal)
           );
         }
 
-        var message =
+        return (
           "【茶葉予約内容】\n\n" +
-          "お名前：" + data.customerName + " 様\n" +
-          "電話番号：" + data.phone + "\n" +
-          "住所：" + data.address + "\n\n" +
-          "商品：\n" + productLines.join("\n") + "\n\n" +
-          "合計金額：" + formatYen(totalAmount) + "\n\n" +
-          "備考：" + (data.note || "なし") + "\n\n" +
-          "【お受け取りについて】\n" +
-          appState.pickupStartDate + "以降にご来店ください。\n" +
-          "ご来店の際は、お名前をスタッフにお伝えください。";
-
-        if (data.lineDisplayName) {
-          message += "\n\nLINE表示名：" + data.lineDisplayName;
-        }
-
-        return message;
+          "お名前：" +
+          data.customerName +
+          " 様\n" +
+          "電話番号：" +
+          data.phone +
+          "\n" +
+          "住所：" +
+          data.address +
+          "\n\n" +
+          "商品：\n" +
+          productLines.join("\n") +
+          "\n\n" +
+          "合計金額：" +
+          formatYen(totalAmount) +
+          "\n\n" +
+          "備考：" +
+          (data.note || "なし") +
+          "\n\n" +
+          "【お受け取り日時】\n" +
+          appState.pickupStartDate +
+          "\n" +
+          "ご来店の際は、お名前をスタッフにお伝えください。"
+        );
       }
 
       function showCompleteMessage(messageText) {
@@ -825,7 +859,9 @@
         card.innerHTML =
           "<h1>ご予約ありがとうございます</h1>" +
           "<p class='lead'>以下の内容をLINEトークに送信しました。</p>" +
-          "<pre>" + escapeHtml(messageText) + "</pre>" +
+          "<pre>" +
+          escapeHtml(messageText) +
+          "</pre>" +
           "<p class='small'>LINEトーク画面に戻り、予約内容が表示されているかご確認ください。</p>" +
           "<button type='button' onclick='closeLiffWindow()'>LINEトークに戻る</button>";
       }
@@ -838,6 +874,7 @@
 
       function showError(message) {
         var statusBox = document.getElementById("statusBox");
+
         statusBox.className = "status error";
         statusBox.innerHTML = message;
       }
