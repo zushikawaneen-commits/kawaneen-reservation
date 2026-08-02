@@ -2,17 +2,30 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    >
+
     <title>川根園 茶葉ご予約フォーム</title>
 
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script
+      charset="utf-8"
+      src="https://static.line-scdn.net/liff/edge/2/sdk.js"
+    ></script>
 
     <style>
       body {
         margin: 0;
         padding: 0;
         background: #f7f5ef;
-        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
         color: #333;
       }
 
@@ -30,15 +43,15 @@
       }
 
       h1 {
-        font-size: 22px;
         margin: 0 0 8px;
         color: #2f5d3a;
+        font-size: 22px;
       }
 
       .lead {
+        margin: 0 0 20px;
         font-size: 14px;
         line-height: 1.7;
-        margin: 0 0 20px;
       }
 
       .status {
@@ -61,9 +74,9 @@
 
       label {
         display: block;
-        font-weight: bold;
         margin: 18px 0 6px;
         font-size: 14px;
+        font-weight: bold;
       }
 
       input,
@@ -74,8 +87,16 @@
         padding: 12px;
         border: 1px solid #ccc;
         border-radius: 10px;
-        font-size: 16px;
         background: #fff;
+        font-size: 16px;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        border-color: #5f8a68;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(47, 93, 58, 0.12);
       }
 
       textarea {
@@ -84,48 +105,49 @@
       }
 
       .product {
+        margin-top: 12px;
+        padding: 14px;
         border: 1px solid #e0ddd2;
         border-radius: 12px;
-        padding: 14px;
-        margin-top: 12px;
         background: #fffdf8;
       }
 
       .product-image {
+        display: block;
         width: 100%;
-        max-height: 220px;
-        object-fit: cover;
-        border-radius: 12px;
+        max-height: 260px;
         margin-bottom: 12px;
+        border-radius: 12px;
         background: #eee;
+        object-fit: contain;
       }
 
       .product-name {
-        font-weight: bold;
         margin-bottom: 4px;
         font-size: 16px;
+        font-weight: bold;
       }
 
       .product-price {
-        font-size: 13px;
-        color: #666;
         margin-bottom: 8px;
+        color: #666;
+        font-size: 13px;
       }
 
       .product-short {
+        margin: 8px 0;
         font-size: 13px;
         line-height: 1.6;
-        margin: 8px 0;
       }
 
       .product-use {
+        margin: 8px 0 12px;
+        padding: 8px;
+        border-radius: 8px;
+        background: #f1f7ef;
+        color: #5f6f53;
         font-size: 12px;
         line-height: 1.6;
-        color: #5f6f53;
-        background: #f1f7ef;
-        border-radius: 8px;
-        padding: 8px;
-        margin: 8px 0;
       }
 
       .notice {
@@ -151,9 +173,9 @@
         padding: 14px;
         border-radius: 12px;
         background: #fff6d8;
+        color: #5a4200;
         font-size: 17px;
         font-weight: bold;
-        color: #5a4200;
       }
 
       .total-detail {
@@ -162,6 +184,13 @@
         font-weight: normal;
         line-height: 1.6;
         white-space: pre-wrap;
+      }
+
+      .field-help {
+        margin-top: 6px;
+        color: #666;
+        font-size: 12px;
+        line-height: 1.6;
       }
 
       button {
@@ -174,17 +203,19 @@
         color: #fff;
         font-size: 17px;
         font-weight: bold;
+        cursor: pointer;
       }
 
       button:disabled {
         background: #999;
+        cursor: not-allowed;
       }
 
       .small {
-        font-size: 12px;
-        color: #666;
-        line-height: 1.6;
         margin-top: 12px;
+        color: #666;
+        font-size: 12px;
+        line-height: 1.6;
       }
 
       .hidden {
@@ -192,12 +223,14 @@
       }
 
       pre {
-        white-space: pre-wrap;
-        background: #f7f5ef;
         padding: 14px;
         border-radius: 12px;
-        line-height: 1.7;
+        background: #f7f5ef;
         font-family: inherit;
+        font-size: 13px;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
       }
     </style>
   </head>
@@ -205,10 +238,12 @@
   <body>
     <div class="container">
       <div class="card" id="mainCard">
-        <h1 id="pageTitle">川根園 茶葉ご予約フォーム</h1>
+        <h1 id="pageTitle">
+          川根園 茶葉ご予約フォーム
+        </h1>
 
         <div id="statusBox" class="status">
-          商品情報とLINE連携を確認しています...
+          ご予約フォームを開いています...
         </div>
 
         <div id="closedArea" class="hidden">
@@ -234,7 +269,9 @@
 
           <div class="notice">
             <strong>お受け取りについて</strong><br>
-            ご予約商品は <span id="pickupStartDateText"></span> 以降にご来店ください。<br>
+            ご予約商品は
+            <span id="pickupStartDateText"></span>
+            以降にご来店ください。<br>
             ご来店の際は、お名前をスタッフにお伝えください。
           </div>
 
@@ -244,49 +281,83 @@
             <div id="productList"></div>
 
             <div class="total-box">
-              <div id="totalAmountDisplay">合計金額：0円</div>
-              <div id="totalDetailDisplay" class="total-detail"></div>
+              <div id="totalAmountDisplay">
+                合計金額：0円
+              </div>
+
+              <div
+                id="totalDetailDisplay"
+                class="total-detail"
+              ></div>
             </div>
 
-            <label for="customerName">お客様名</label>
+            <label for="customerName">
+              お客様名
+            </label>
+
             <input
               type="text"
               id="customerName"
               name="customerName"
               placeholder="例：山田 花子"
+              autocomplete="name"
+              maxlength="50"
               required
             >
 
-            <label for="phone">電話番号</label>
+            <label for="phone">
+              電話番号
+            </label>
+
             <input
               type="tel"
               id="phone"
               name="phone"
               placeholder="例：090-1234-5678"
+              autocomplete="tel"
+              inputmode="tel"
+              maxlength="20"
               required
             >
 
-            <label for="address">住所</label>
+            <label for="address">
+              住所
+            </label>
+
             <textarea
               id="address"
               name="address"
               placeholder="例：神奈川県鎌倉市〇〇..."
+              autocomplete="street-address"
+              maxlength="200"
               required
             ></textarea>
 
-            <label for="note">備考</label>
+            <label for="note">
+              備考（のし・包装など）
+            </label>
+
             <textarea
               id="note"
               name="note"
-              placeholder="ご連絡事項などがございましたらご入力ください。"
+              placeholder="のし・包装などのご希望がございましたらご記入ください。"
+              maxlength="300"
             ></textarea>
+
+            <div class="field-help">
+              のしの種類、お名前、包装方法など、ご希望がございましたらご記入ください。
+            </div>
 
             <div class="notice">
               送信すると、予約内容がお客様のLINEトークに送信されます。<br>
               店舗側でもLINEチャットと予約一覧で予約内容を確認いたします。
             </div>
 
-            <button type="button" id="submitButton" onclick="sendReservation()">
+            <button
+              type="button"
+              id="submitButton"
+              onclick="sendReservation()"
+            >
               この内容で予約する
             </button>
 
@@ -301,8 +372,12 @@
     <script>
       var CONFIG = {
         liffId: "2003410696-qvnVN2Xb",
-        gasApiUrl: "https://script.google.com/macros/s/AKfycbyVmI58lV8N9NLuqoZAscmBaCU_UMuExBk-fUfxvSmOp4UwmT6xXdTBzDI42IXK0MuJ/exec",
+
+        gasApiUrl:
+          "https://script.google.com/macros/s/AKfycbyVmI58lV8N9NLuqoZAscmBaCU_UMuExBk-fUfxvSmOp4UwmT6xXdTBzDI42IXK0MuJ/exec",
+
         formTitle: "川根園 茶葉ご予約フォーム",
+
         defaultStoreKey: "ofuna"
       };
 
@@ -320,54 +395,92 @@
       };
 
       async function initializePage() {
-        document.getElementById("pageTitle").textContent = CONFIG.formTitle;
+        document.getElementById("pageTitle").textContent =
+          CONFIG.formTitle;
 
         appState.storeKey = getStoreKeyFromUrl();
 
         try {
-          var publicConfig = await loadPublicConfig(appState.storeKey);
+          var publicConfig =
+            await loadPublicConfig(appState.storeKey);
 
           if (!publicConfig.success) {
-            showError(publicConfig.message || "商品情報を取得できませんでした。");
+            showError(
+              publicConfig.message ||
+              "商品情報を取得できませんでした。"
+            );
+
             return;
           }
 
-          appState.storeKey = publicConfig.storeKey || appState.storeKey;
-          appState.pickupStartDate = publicConfig.pickupStartDate || "指定日";
-          appState.reservationOpen = publicConfig.reservationOpen !== false;
-          appState.products = publicConfig.products || [];
+          appState.storeKey =
+            publicConfig.storeKey ||
+            appState.storeKey;
 
-          document.getElementById("pickupStartDateText").textContent =
-            appState.pickupStartDate;
+          appState.pickupStartDate =
+            publicConfig.pickupStartDate ||
+            "指定日";
+
+          appState.reservationOpen =
+            publicConfig.reservationOpen !== false;
+
+          appState.products =
+            publicConfig.products || [];
+
+          document.getElementById(
+            "pickupStartDateText"
+          ).textContent = appState.pickupStartDate;
 
           if (!appState.reservationOpen) {
-            document.getElementById("statusBox").className = "status warning";
-            document.getElementById("statusBox").textContent =
+            var statusBox =
+              document.getElementById("statusBox");
+
+            statusBox.className =
+              "status warning";
+
+            statusBox.textContent =
               "現在、予約受付は終了しています。";
-            document.getElementById("closedArea").classList.remove("hidden");
+
+            document.getElementById(
+              "closedArea"
+            ).classList.remove("hidden");
+
             return;
           }
 
           if (appState.products.length === 0) {
-            showError("現在、表示できる商品がありません。");
+            showError(
+              "現在、表示できる商品がありません。"
+            );
+
             return;
           }
 
           await initializeLiff();
 
         } catch (error) {
-          showError(error.message || String(error));
+          showError(
+            error.message || String(error)
+          );
         }
       }
 
       async function initializeLiff() {
-        var statusBox = document.getElementById("statusBox");
+        var statusBox =
+          document.getElementById("statusBox");
 
         try {
-          if (!CONFIG.liffId || CONFIG.liffId === "ここにLIFF_IDを入れる") {
-            statusBox.className = "status error";
+          if (
+            !CONFIG.liffId ||
+            CONFIG.liffId ===
+              "ここにLIFF_IDを入れる"
+          ) {
+            statusBox.className =
+              "status error";
+
             statusBox.textContent =
-              "LIFF IDが未設定です。index.html内の liffId を設定してください。";
+              "LIFF IDが未設定です。";
+
             return;
           }
 
@@ -376,152 +489,229 @@
           });
 
           if (!liff.isLoggedIn()) {
-            statusBox.className = "status warning";
-            statusBox.textContent = "LINEログインへ移動します...";
+            statusBox.className =
+              "status warning";
+
+            statusBox.textContent =
+              "LINEログイン画面へ移動します...";
 
             liff.login({
-              redirectUri: window.location.href
+              redirectUri:
+                window.location.href
             });
 
             return;
           }
 
-          if (!liff.isInClient()) {
-            statusBox.className = "status warning";
-            statusBox.innerHTML =
-              "このページはLINEアプリ内で開いてください。<br>" +
-              "外部ブラウザでは、LINEトークへの送信ができない場合があります。";
-          } else {
-            statusBox.className = "status";
-            statusBox.textContent = "LINE連携を確認しました。";
-          }
-
           try {
-            lineProfile = await liff.getProfile();
-
-            if (lineProfile && lineProfile.displayName) {
-              statusBox.innerHTML =
-                "LINE連携を確認しました。<br>" +
-                "LINE表示名：" + escapeHtml(lineProfile.displayName);
-            }
+            lineProfile =
+              await liff.getProfile();
           } catch (profileError) {
-            statusBox.className = "status warning";
-            statusBox.textContent =
-              "LINEプロフィールは取得できませんでしたが、フォーム入力は可能です。";
+            lineProfile = null;
           }
 
           renderProducts();
-          document.getElementById("formArea").classList.remove("hidden");
+
+          document.getElementById(
+            "formArea"
+          ).classList.remove("hidden");
+
           updateLiveTotal();
+
+          if (liff.isInClient()) {
+            statusBox.classList.add(
+              "hidden"
+            );
+          } else {
+            statusBox.className =
+              "status warning";
+
+            statusBox.innerHTML =
+              "このページはLINEアプリ内で開いてください。<br>" +
+              "外部ブラウザでは、LINEトークへの送信ができません。";
+          }
 
         } catch (error) {
           showError(
-            "LIFF初期化に失敗しました。<br>" +
-            escapeHtml(error.message || String(error))
+            "フォームを開けませんでした。<br>" +
+            escapeHtml(
+              error.message ||
+              String(error)
+            )
           );
         }
       }
 
       function loadPublicConfig(storeKey) {
-        return new Promise(function(resolve, reject) {
-          if (
-            !CONFIG.gasApiUrl ||
-            CONFIG.gasApiUrl === "ここにGAS_WEBアプリURLを入れる"
-          ) {
-            reject(
-              new Error(
-                "GAS API URLが未設定です。index.html内の gasApiUrl を設定してください。"
-              )
+        return new Promise(
+          function(resolve, reject) {
+            if (
+              !CONFIG.gasApiUrl ||
+              CONFIG.gasApiUrl ===
+                "ここにGAS_WEBアプリURLを入れる"
+            ) {
+              reject(
+                new Error(
+                  "GAS API URLが未設定です。"
+                )
+              );
+
+              return;
+            }
+
+            var callbackName =
+              "jsonpCallback_" +
+              Date.now() +
+              "_" +
+              Math.floor(
+                Math.random() * 100000
+              );
+
+            var script =
+              document.createElement(
+                "script"
+              );
+
+            window[callbackName] =
+              function(data) {
+                cleanupJsonp(
+                  script,
+                  callbackName
+                );
+
+                resolve(data);
+              };
+
+            script.onerror =
+              function() {
+                cleanupJsonp(
+                  script,
+                  callbackName
+                );
+
+                reject(
+                  new Error(
+                    "商品情報の取得に失敗しました。GASのWebアプリURLを確認してください。"
+                  )
+                );
+              };
+
+            var separator =
+              CONFIG.gasApiUrl.indexOf(
+                "?"
+              ) === -1
+                ? "?"
+                : "&";
+
+            script.src =
+              CONFIG.gasApiUrl +
+              separator +
+              "store=" +
+              encodeURIComponent(
+                storeKey
+              ) +
+              "&callback=" +
+              encodeURIComponent(
+                callbackName
+              ) +
+              "&_=" +
+              Date.now();
+
+            document.body.appendChild(
+              script
             );
-            return;
           }
-
-          var callbackName =
-            "jsonpCallback_" +
-            Date.now() +
-            "_" +
-            Math.floor(Math.random() * 100000);
-
-          var script = document.createElement("script");
-
-          window[callbackName] = function(data) {
-            cleanupJsonp(script, callbackName);
-            resolve(data);
-          };
-
-          script.onerror = function() {
-            cleanupJsonp(script, callbackName);
-
-            reject(
-              new Error(
-                "商品情報の取得に失敗しました。GASのWebアプリURLを確認してください。"
-              )
-            );
-          };
-
-          var separator =
-            CONFIG.gasApiUrl.indexOf("?") === -1 ? "?" : "&";
-
-          script.src =
-            CONFIG.gasApiUrl +
-            separator +
-            "store=" +
-            encodeURIComponent(storeKey) +
-            "&callback=" +
-            encodeURIComponent(callbackName) +
-            "&_=" +
-            Date.now();
-
-          document.body.appendChild(script);
-        });
+        );
       }
 
-      function cleanupJsonp(script, callbackName) {
+      function cleanupJsonp(
+        script,
+        callbackName
+      ) {
         try {
-          if (script && script.parentNode) {
-            script.parentNode.removeChild(script);
+          if (
+            script &&
+            script.parentNode
+          ) {
+            script.parentNode.removeChild(
+              script
+            );
           }
-        } catch (e) {}
+        } catch (error) {}
 
         try {
           delete window[callbackName];
-        } catch (e) {
-          window[callbackName] = undefined;
+        } catch (error) {
+          window[callbackName] =
+            undefined;
         }
       }
 
       function getStoreKeyFromUrl() {
-        var params = new URLSearchParams(window.location.search);
+        var params =
+          new URLSearchParams(
+            window.location.search
+          );
 
-        var directStore = params.get("store");
+        var directStore =
+          params.get("store");
 
         if (directStore) {
-          return normalizeStoreKey(directStore);
+          return normalizeStoreKey(
+            directStore
+          );
         }
 
-        var liffState = params.get("liff.state");
+        var liffState =
+          params.get("liff.state");
 
         if (liffState) {
-          var stateText = decodeURIComponent(liffState);
+          var stateText;
+
+          try {
+            stateText =
+              decodeURIComponent(
+                liffState
+              );
+          } catch (error) {
+            stateText = liffState;
+          }
+
           var queryText = "";
 
-          if (stateText.indexOf("?") === 0) {
-            queryText = stateText.substring(1);
-          } else if (stateText.indexOf("?") !== -1) {
-            queryText = stateText.split("?")[1];
+          if (
+            stateText.indexOf("?") === 0
+          ) {
+            queryText =
+              stateText.substring(1);
+          } else if (
+            stateText.indexOf("?") !== -1
+          ) {
+            queryText =
+              stateText.split("?")[1];
           }
 
           if (queryText) {
-            var stateParams = new URLSearchParams(queryText);
-            var stateStore = stateParams.get("store");
+            var stateParams =
+              new URLSearchParams(
+                queryText
+              );
+
+            var stateStore =
+              stateParams.get("store");
 
             if (stateStore) {
-              return normalizeStoreKey(stateStore);
+              return normalizeStoreKey(
+                stateStore
+              );
             }
           }
         }
 
-        return normalizeStoreKey(CONFIG.defaultStoreKey || "ofuna");
+        return normalizeStoreKey(
+          CONFIG.defaultStoreKey ||
+          "ofuna"
+        );
       }
 
       function normalizeStoreKey(value) {
@@ -531,51 +721,98 @@
       }
 
       function renderProducts() {
-        var productList = document.getElementById("productList");
+        var productList =
+          document.getElementById(
+            "productList"
+          );
+
         var html = "";
 
-        for (var i = 0; i < appState.products.length; i++) {
-          var product = appState.products[i];
+        for (
+          var i = 0;
+          i < appState.products.length;
+          i++
+        ) {
+          var product =
+            appState.products[i];
 
-          html += '<div class="product">';
+          html +=
+            '<div class="product">';
 
           if (product.imageUrl) {
             html +=
-              '<img class="product-image" src="' +
-              escapeAttribute(product.imageUrl) +
-              '" alt="' +
-              escapeAttribute(product.name) +
-              '" onerror="this.style.display=\'none\';">';
+              '<img ' +
+              'class="product-image" ' +
+              'src="' +
+              escapeAttribute(
+                product.imageUrl
+              ) +
+              '" ' +
+              'alt="' +
+              escapeAttribute(
+                product.name
+              ) +
+              '" ' +
+              'loading="lazy" ' +
+              'onerror="this.style.display=\'none\';"' +
+              ">";
           }
 
           html +=
             '<div class="product-name">' +
             escapeHtml(product.name) +
-            "</div>" +
-            '<div class="product-price">価格：' +
+            "</div>";
+
+          html +=
+            '<div class="product-price">' +
+            "価格：" +
             formatYen(product.price) +
             "</div>";
 
-          if (product.shortDescription) {
+          if (
+            product.shortDescription
+          ) {
             html +=
               '<div class="product-short">' +
-              escapeHtml(product.shortDescription) +
+              escapeHtml(
+                product.shortDescription
+              ) +
               "</div>";
           }
 
-          if (product.recommendedUse) {
+          if (
+            product.recommendedUse
+          ) {
             html +=
-              '<div class="product-use">おすすめ：' +
-              escapeHtml(product.recommendedUse) +
+              '<div class="product-use">' +
+              "おすすめ：" +
+              escapeHtml(
+                product.recommendedUse
+              ) +
               "</div>";
           }
 
           html +=
-            '<select name="qty_' +
+            '<select ' +
+            'name="qty_' +
             i +
-            '" onchange="updateLiveTotal()">';
+            '" ' +
+            'aria-label="' +
+            escapeAttribute(
+              product.name
+            ) +
+            'の個数" ' +
+            'onchange="updateLiveTotal()"' +
+            ">";
 
-          for (var q = 0; q <= product.maxQty; q++) {
+          var maxQty =
+            Number(product.maxQty) || 0;
+
+          for (
+            var q = 0;
+            q <= maxQty;
+            q++
+          ) {
             html +=
               '<option value="' +
               q +
@@ -584,27 +821,55 @@
               "個</option>";
           }
 
-          html += "</select></div>";
+          html +=
+            "</select>" +
+            "</div>";
         }
 
         productList.innerHTML = html;
       }
 
       function getSelectedProducts() {
-        var form = document.getElementById("reservationForm");
-        var formData = new FormData(form);
+        var form =
+          document.getElementById(
+            "reservationForm"
+          );
+
+        var formData =
+          new FormData(form);
+
         var selectedProducts = [];
 
-        for (var i = 0; i < appState.products.length; i++) {
-          var qty = Number(formData.get("qty_" + i)) || 0;
+        for (
+          var i = 0;
+          i < appState.products.length;
+          i++
+        ) {
+          var qty =
+            Number(
+              formData.get(
+                "qty_" + i
+              )
+            ) || 0;
 
           if (qty > 0) {
+            var price =
+              Number(
+                appState.products[i]
+                  .price
+              ) || 0;
+
             selectedProducts.push({
-              name: appState.products[i].name,
+              name:
+                appState.products[i]
+                  .name,
+
               qty: qty,
-              price: Number(appState.products[i].price) || 0,
+
+              price: price,
+
               subtotal:
-                (Number(appState.products[i].price) || 0) * qty
+                price * qty
             });
           }
         }
@@ -613,248 +878,693 @@
       }
 
       function updateLiveTotal() {
-        var products = getSelectedProducts();
+        var products =
+          getSelectedProducts();
+
         var totalAmount = 0;
         var detailLines = [];
 
-        for (var i = 0; i < products.length; i++) {
-          totalAmount += products[i].subtotal;
+        for (
+          var i = 0;
+          i < products.length;
+          i++
+        ) {
+          totalAmount +=
+            products[i].subtotal;
 
           detailLines.push(
             products[i].name +
             " × " +
             products[i].qty +
             "個　" +
-            formatYen(products[i].subtotal)
+            formatYen(
+              products[i].subtotal
+            )
           );
         }
 
-        document.getElementById("totalAmountDisplay").textContent =
-          "合計金額：" + formatYen(totalAmount);
+        document.getElementById(
+          "totalAmountDisplay"
+        ).textContent =
+          "合計金額：" +
+          formatYen(totalAmount);
 
-        document.getElementById("totalDetailDisplay").textContent =
+        document.getElementById(
+          "totalDetailDisplay"
+        ).textContent =
           detailLines.join("\n");
       }
 
       async function sendReservation() {
-        var form = document.getElementById("reservationForm");
-        var formData = new FormData(form);
+        var form =
+          document.getElementById(
+            "reservationForm"
+          );
 
-        var customerName = trimText(formData.get("customerName"));
-        var phone = trimText(formData.get("phone"));
-        var address = trimText(formData.get("address"));
-        var note = trimText(formData.get("note") || "");
+        if (
+          typeof form.reportValidity ===
+          "function"
+        ) {
+          if (!form.reportValidity()) {
+            return;
+          }
+        }
 
-        if (!customerName || !phone || !address) {
-          alert("お客様名・電話番号・住所を入力してください。");
+        var formData =
+          new FormData(form);
+
+        var customerName =
+          trimText(
+            formData.get(
+              "customerName"
+            )
+          );
+
+        var phone =
+          trimText(
+            formData.get("phone")
+          );
+
+        var address =
+          trimText(
+            formData.get("address")
+          );
+
+        var note =
+          trimText(
+            formData.get("note") || ""
+          );
+
+        if (
+          !customerName ||
+          !phone ||
+          !address
+        ) {
+          alert(
+            "お客様名・電話番号・住所を入力してください。"
+          );
+
           return;
         }
 
-        if (customerName.length > 50) {
-          alert("お客様名が長すぎます。");
+        if (
+          customerName.length > 50
+        ) {
+          alert(
+            "お客様名が長すぎます。"
+          );
+
           return;
         }
 
         if (phone.length > 20) {
-          alert("電話番号が長すぎます。");
+          alert(
+            "電話番号が長すぎます。"
+          );
+
           return;
         }
 
         if (address.length > 200) {
-          alert("住所が長すぎます。");
+          alert(
+            "住所が長すぎます。"
+          );
+
           return;
         }
 
         if (note.length > 300) {
-          alert("備考が長すぎます。");
+          alert(
+            "備考が長すぎます。"
+          );
+
           return;
         }
 
-        var products = getSelectedProducts();
+        var products =
+          getSelectedProducts();
 
-        if (products.length === 0) {
-          alert("商品を1つ以上選択してください。");
+        if (
+          products.length === 0
+        ) {
+          alert(
+            "商品を1つ以上選択してください。"
+          );
+
           return;
         }
 
-        if (!liff.isInClient()) {
+        if (
+          typeof liff ===
+            "undefined" ||
+          !liff.isInClient()
+        ) {
           alert(
             "LINEトークに送信するには、LINEアプリ内で開いてください。"
           );
+
           return;
         }
 
-        var messageText = createReservationMessage({
-          customerName: customerName,
+        var reservationData = {
+          customerName:
+            customerName,
+
           phone: phone,
+
           address: address,
+
           products: products,
-          note: note,
-          lineDisplayName: lineProfile
-            ? lineProfile.displayName
-            : ""
-        });
+
+          note: note
+        };
+
+        var messageText =
+          createReservationText(
+            reservationData
+          );
 
         var confirmMessage =
           "以下の内容で予約します。\n\n" +
           messageText +
           "\n\nこの内容で送信してよろしいですか？";
 
-        if (!confirm(confirmMessage)) {
+        if (
+          !confirm(confirmMessage)
+        ) {
           return;
         }
 
         var submitButton =
-          document.getElementById("submitButton");
+          document.getElementById(
+            "submitButton"
+          );
 
         submitButton.disabled = true;
+
         submitButton.textContent =
           "LINE送信・保存中...";
 
         try {
+          var flexMessage =
+            createReservationFlexMessage(
+              reservationData
+            );
+
           await liff.sendMessages([
-            {
-              type: "text",
-              text: messageText
-            }
+            flexMessage
           ]);
 
-          await saveReservationToGoogle({
-            customerName: customerName,
-            phone: phone,
-            address: address,
-            products: products,
-            note: note
-          });
+          await saveReservationToGoogle(
+            reservationData
+          );
 
-          showCompleteMessage(messageText);
+          showCompleteMessage(
+            messageText
+          );
 
         } catch (error) {
           alert(
             "送信または保存に失敗しました。\n\n" +
             "エラー内容：\n" +
-            (error.message || String(error))
+            (
+              error.message ||
+              String(error)
+            )
           );
 
-          submitButton.disabled = false;
+          submitButton.disabled =
+            false;
+
           submitButton.textContent =
             "この内容で予約する";
         }
       }
 
-      async function saveReservationToGoogle(data) {
+      async function saveReservationToGoogle(
+        data
+      ) {
         if (
           !CONFIG.gasApiUrl ||
-          CONFIG.gasApiUrl === "ここにGAS_WEBアプリURLを入れる"
+          CONFIG.gasApiUrl ===
+            "ここにGAS_WEBアプリURLを入れる"
         ) {
-          throw new Error("GAS API URLが未設定です。");
+          throw new Error(
+            "GAS API URLが未設定です。"
+          );
         }
 
         var idToken = "";
 
         try {
-          if (typeof liff.getIDToken === "function") {
-            idToken = liff.getIDToken() || "";
+          if (
+            typeof liff.getIDToken ===
+            "function"
+          ) {
+            idToken =
+              liff.getIDToken() || "";
           }
-        } catch (e) {
+        } catch (error) {
           idToken = "";
         }
 
         var payload = {
-          action: "saveReservation",
-          storeKey: appState.storeKey,
-          lineUserId: lineProfile
-            ? lineProfile.userId || ""
-            : "",
-          lineDisplayName: lineProfile
-            ? lineProfile.displayName || ""
-            : "",
-          idToken: idToken,
-          customerName: data.customerName,
-          phone: data.phone,
-          address: data.address,
-          products: data.products,
-          note: data.note || ""
+          action:
+            "saveReservation",
+
+          storeKey:
+            appState.storeKey,
+
+          lineUserId:
+            lineProfile
+              ? lineProfile.userId ||
+                ""
+              : "",
+
+          lineDisplayName:
+            lineProfile
+              ? lineProfile.displayName ||
+                ""
+              : "",
+
+          idToken:
+            idToken,
+
+          customerName:
+            data.customerName,
+
+          phone:
+            data.phone,
+
+          address:
+            data.address,
+
+          products:
+            data.products,
+
+          note:
+            data.note || ""
         };
 
-        await fetch(CONFIG.gasApiUrl, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify(payload)
-        });
+        await fetch(
+          CONFIG.gasApiUrl,
+          {
+            method: "POST",
+
+            mode: "no-cors",
+
+            headers: {
+              "Content-Type":
+                "text/plain;charset=utf-8"
+            },
+
+            body:
+              JSON.stringify(payload)
+          }
+        );
       }
 
-      function createReservationMessage(data) {
+      function createReservationText(
+        data
+      ) {
         var productLines = [];
         var totalAmount = 0;
 
-        for (var i = 0; i < data.products.length; i++) {
-          var item = data.products[i];
+        for (
+          var i = 0;
+          i < data.products.length;
+          i++
+        ) {
+          var item =
+            data.products[i];
 
-          totalAmount += item.subtotal;
+          totalAmount +=
+            item.subtotal;
 
           productLines.push(
             item.name +
             " × " +
             item.qty +
             "個　" +
-            formatYen(item.subtotal)
+            formatYen(
+              item.subtotal
+            )
           );
         }
 
-        var message =
+        return (
           "【茶葉予約内容】\n\n" +
+
           "お名前：" +
           data.customerName +
           " 様\n" +
+
           "電話番号：" +
           data.phone +
           "\n" +
+
           "住所：" +
           data.address +
           "\n\n" +
+
           "商品：\n" +
           productLines.join("\n") +
           "\n\n" +
+
           "合計金額：" +
           formatYen(totalAmount) +
           "\n\n" +
+
           "備考：" +
-          (data.note || "なし") +
+          (
+            data.note ||
+            "なし"
+          ) +
           "\n\n" +
+
           "【お受け取りについて】\n" +
           appState.pickupStartDate +
           "以降にご来店ください。\n" +
-          "ご来店の際は、お名前をスタッフにお伝えください。";
 
-        if (data.lineDisplayName) {
-          message +=
-            "\n\nLINE表示名：" +
-            data.lineDisplayName;
-        }
-
-        return message;
+          "ご来店の際は、お名前をスタッフにお伝えください。"
+        );
       }
 
-      function showCompleteMessage(messageText) {
-        var card = document.getElementById("mainCard");
+      function createReservationFlexMessage(
+        data
+      ) {
+        var totalAmount = 0;
+
+        var bodyContents = [
+          {
+            type: "text",
+            text:
+              data.customerName +
+              " 様",
+            size: "lg",
+            weight: "bold",
+            color: "#2F5D3A",
+            wrap: true
+          },
+
+          {
+            type: "box",
+            layout: "vertical",
+            spacing: "sm",
+            margin: "lg",
+            contents: [
+              createFlexLabelValue(
+                "電話番号",
+                data.phone
+              ),
+
+              createFlexLabelValue(
+                "住所",
+                data.address
+              )
+            ]
+          },
+
+          {
+            type: "separator",
+            margin: "lg",
+            color: "#E0DDD2"
+          },
+
+          {
+            type: "text",
+            text: "ご予約商品",
+            margin: "lg",
+            size: "sm",
+            weight: "bold",
+            color: "#2F5D3A"
+          }
+        ];
+
+        for (
+          var i = 0;
+          i < data.products.length;
+          i++
+        ) {
+          var item =
+            data.products[i];
+
+          totalAmount +=
+            item.subtotal;
+
+          bodyContents.push({
+            type: "box",
+            layout: "vertical",
+            margin:
+              i === 0
+                ? "md"
+                : "sm",
+
+            contents: [
+              {
+                type: "text",
+                text: item.name,
+                size: "sm",
+                weight: "bold",
+                wrap: true,
+                color: "#333333"
+              },
+
+              {
+                type: "text",
+                text:
+                  item.qty +
+                  "個　" +
+                  formatYen(
+                    item.subtotal
+                  ),
+                size: "sm",
+                color: "#666666",
+                wrap: true
+              }
+            ]
+          });
+        }
+
+        bodyContents.push(
+          {
+            type: "separator",
+            margin: "lg",
+            color: "#E0DDD2"
+          },
+
+          {
+            type: "box",
+            layout: "horizontal",
+            margin: "lg",
+            contents: [
+              {
+                type: "text",
+                text: "合計金額",
+                size: "md",
+                weight: "bold",
+                color: "#333333",
+                flex: 2
+              },
+
+              {
+                type: "text",
+                text:
+                  formatYen(
+                    totalAmount
+                  ),
+                size: "lg",
+                weight: "bold",
+                color: "#2F5D3A",
+                align: "end",
+                flex: 3
+              }
+            ]
+          },
+
+          {
+            type: "separator",
+            margin: "lg",
+            color: "#E0DDD2"
+          },
+
+          {
+            type: "text",
+            text: "備考",
+            margin: "lg",
+            size: "sm",
+            weight: "bold",
+            color: "#2F5D3A"
+          },
+
+          {
+            type: "text",
+            text:
+              data.note ||
+              "なし",
+            margin: "sm",
+            size: "sm",
+            color: "#555555",
+            wrap: true
+          },
+
+          {
+            type: "box",
+            layout: "vertical",
+            margin: "lg",
+            paddingAll: "12px",
+            cornerRadius: "10px",
+            backgroundColor:
+              "#F1F7EF",
+
+            contents: [
+              {
+                type: "text",
+                text:
+                  "お受け取りについて",
+                size: "sm",
+                weight: "bold",
+                color: "#2F5D3A"
+              },
+
+              {
+                type: "text",
+                text:
+                  appState.pickupStartDate +
+                  "以降にご来店ください。",
+                margin: "sm",
+                size: "sm",
+                color: "#333333",
+                wrap: true
+              },
+
+              {
+                type: "text",
+                text:
+                  "ご来店の際は、お名前をスタッフにお伝えください。",
+                margin: "sm",
+                size: "xs",
+                color: "#666666",
+                wrap: true
+              }
+            ]
+          }
+        );
+
+        return {
+          type: "flex",
+
+          altText:
+            "【茶葉予約】",
+
+          contents: {
+            type: "bubble",
+
+            size: "mega",
+
+            header: {
+              type: "box",
+              layout: "vertical",
+              paddingAll: "18px",
+              backgroundColor:
+                "#2F5D3A",
+
+              contents: [
+                {
+                  type: "text",
+                  text:
+                    "茶葉のご予約内容",
+                  color: "#FFFFFF",
+                  size: "xl",
+                  weight: "bold",
+                  wrap: true
+                },
+
+                {
+                  type: "text",
+                  text:
+                    "川根園",
+                  margin: "sm",
+                  color: "#DCEBDD",
+                  size: "sm"
+                }
+              ]
+            },
+
+            body: {
+              type: "box",
+              layout: "vertical",
+              paddingAll: "18px",
+              contents: bodyContents
+            }
+          }
+        };
+      }
+
+      function createFlexLabelValue(
+        label,
+        value
+      ) {
+        return {
+          type: "box",
+          layout: "vertical",
+          spacing: "xs",
+
+          contents: [
+            {
+              type: "text",
+              text: label,
+              size: "xs",
+              color: "#777777"
+            },
+
+            {
+              type: "text",
+              text:
+                value || "",
+              size: "sm",
+              color: "#333333",
+              wrap: true
+            }
+          ]
+        };
+      }
+
+      function showCompleteMessage(
+        messageText
+      ) {
+        var card =
+          document.getElementById(
+            "mainCard"
+          );
 
         card.innerHTML =
           "<h1>ご予約ありがとうございます</h1>" +
-          "<p class='lead'>以下の内容をLINEトークに送信しました。</p>" +
+
+          "<p class='lead'>" +
+          "ご予約内容をLINEトークに送信しました。" +
+          "</p>" +
+
           "<pre>" +
           escapeHtml(messageText) +
           "</pre>" +
-          "<p class='small'>LINEトーク画面に戻り、予約内容が表示されているかご確認ください。</p>" +
-          "<button type='button' onclick='closeLiffWindow()'>LINEトークに戻る</button>";
+
+          "<p class='small'>" +
+          "LINEトーク画面に戻り、予約内容が表示されているかご確認ください。" +
+          "</p>" +
+
+          "<button " +
+          "type='button' " +
+          "onclick='closeLiffWindow()'" +
+          ">" +
+          "LINEトークに戻る" +
+          "</button>";
       }
 
       function closeLiffWindow() {
         if (
-          typeof liff !== "undefined" &&
+          typeof liff !==
+            "undefined" &&
           liff.isInClient()
         ) {
           liff.closeWindow();
@@ -863,28 +1573,45 @@
 
       function showError(message) {
         var statusBox =
-          document.getElementById("statusBox");
+          document.getElementById(
+            "statusBox"
+          );
 
-        statusBox.className = "status error";
-        statusBox.innerHTML = message;
+        statusBox.classList.remove(
+          "hidden"
+        );
+
+        statusBox.className =
+          "status error";
+
+        statusBox.innerHTML =
+          message;
       }
 
       function formatYen(amount) {
         return (
-          Number(amount || 0).toLocaleString("ja-JP") +
+          Number(
+            amount || 0
+          ).toLocaleString(
+            "ja-JP"
+          ) +
           "円"
         );
       }
 
       function trimText(value) {
-        return String(value || "").replace(
+        return String(
+          value || ""
+        ).replace(
           /^\s+|\s+$/g,
           ""
         );
       }
 
       function escapeHtml(text) {
-        return String(text || "")
+        return String(
+          text || ""
+        )
           .replace(/&/g, "&amp;")
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
@@ -892,8 +1619,12 @@
           .replace(/'/g, "&#039;");
       }
 
-      function escapeAttribute(text) {
-        return escapeHtml(text).replace(
+      function escapeAttribute(
+        text
+      ) {
+        return escapeHtml(
+          text
+        ).replace(
           /`/g,
           "&#096;"
         );
