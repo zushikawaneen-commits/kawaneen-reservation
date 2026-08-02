@@ -219,7 +219,7 @@
       }
 
       .hidden {
-        display: none;
+        display: none !important;
       }
 
       pre {
@@ -243,7 +243,7 @@
         </h1>
 
         <div id="statusBox" class="status">
-          ご予約フォームを開いています...
+          フォームを開いています...
         </div>
 
         <div id="closedArea" class="hidden">
@@ -388,6 +388,12 @@
         products: []
       };
 
+      /*
+       * LINEプロフィールはスプレッドシート保存用として
+       * 内部で取得します。
+       *
+       * お客様画面やLINE予約確認メッセージには表示しません。
+       */
       var lineProfile = null;
 
       window.onload = function() {
@@ -475,11 +481,9 @@
             CONFIG.liffId ===
               "ここにLIFF_IDを入れる"
           ) {
-            statusBox.className =
-              "status error";
-
-            statusBox.textContent =
-              "LIFF IDが未設定です。";
+            showError(
+              "LIFF IDが未設定です。"
+            );
 
             return;
           }
@@ -503,6 +507,10 @@
             return;
           }
 
+          /*
+           * LINEプロフィールは内部保存用に取得します。
+           * statusBoxには表示しません。
+           */
           try {
             lineProfile =
               await liff.getProfile();
@@ -518,10 +526,14 @@
 
           updateLiveTotal();
 
+          /*
+           * LINEアプリ内で正常に開けた場合、
+           * 「フォームを開いています...」の表示を消します。
+           */
           if (liff.isInClient()) {
-            statusBox.classList.add(
-              "hidden"
-            );
+            statusBox.textContent = "";
+            statusBox.className =
+              "status hidden";
           } else {
             statusBox.className =
               "status warning";
@@ -1135,6 +1147,10 @@
           storeKey:
             appState.storeKey,
 
+          /*
+           * LINE情報はスプレッドシート保存用です。
+           * お客様画面には表示しません。
+           */
           lineUserId:
             lineProfile
               ? lineProfile.userId ||
@@ -1212,6 +1228,9 @@
           );
         }
 
+        /*
+         * LINE表示名はここへ追加しません。
+         */
         return (
           "【茶葉予約内容】\n\n" +
 
@@ -1576,10 +1595,6 @@
           document.getElementById(
             "statusBox"
           );
-
-        statusBox.classList.remove(
-          "hidden"
-        );
 
         statusBox.className =
           "status error";
