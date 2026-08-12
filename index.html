@@ -542,13 +542,13 @@
       var idToken =
         liff.getIDToken();
 
-      if (!idToken) {
-        showError(
-          "LINE認証を確認できませんでした。LINEアプリからフォームを開き直してください。"
-        );
+if (!idToken) {
+  showError(
+    "【CLIENT】IDトークンを取得できませんでした。"
+  );
 
-        return;
-      }
+  return;
+}
 
       renderProducts();
 
