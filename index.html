@@ -293,6 +293,44 @@
       font-size: 12px;
     }
 
+    .privacy-text {
+      margin: 0 0 16px;
+      color: #4f4f4b;
+      font-size: 13px;
+    }
+
+    .privacy-text + .privacy-text {
+      margin-top: -8px;
+    }
+
+    .consent-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 13px 14px;
+      background: var(--green-light);
+      border: 1px solid #cadbce;
+      border-radius: 9px;
+      color: var(--green-dark);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .consent-checkbox {
+      width: 20px;
+      height: 20px;
+      margin: 1px 0 0;
+      flex: 0 0 auto;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+
+    .consent-checkbox:focus-visible {
+      outline: 3px solid rgba(40,89,67,0.20);
+      outline-offset: 2px;
+    }
+
     .total-box {
       display: flex;
       align-items: center;
@@ -751,6 +789,45 @@
       </section>
 
 
+      <section class="card">
+
+        <h2 class="section-title">
+          個人情報の取り扱い
+        </h2>
+
+        <p
+          id="privacyConsentText"
+          class="privacy-text"
+        >
+          ご入力いただいた氏名・住所・電話番号・備考およびLINEユーザー情報は、本予約の受付、重複予約の防止、商品準備、ご連絡、店頭でのお受け取り確認のためにのみ使用します。
+        </p>
+
+        <p class="privacy-text">
+          広告・営業案内など、これら以外の目的には使用しません。また、法令に基づく場合を除き、ご本人の同意なく第三者に提供しません。
+        </p>
+
+        <label class="consent-box">
+
+          <input
+            id="privacyConsent"
+            class="consent-checkbox"
+            type="checkbox"
+            required
+            aria-describedby="privacyConsentText"
+          >
+
+          <span>
+            上記の個人情報の取り扱いに同意します
+            <span class="required">
+              必須
+            </span>
+          </span>
+
+        </label>
+
+      </section>
+
+
       <div class="total-box">
 
         <div class="total-label">
@@ -771,6 +848,7 @@
         id="confirmButton"
         class="primary-button"
         type="button"
+        disabled
       >
         予約内容を確認する
       </button>
@@ -1086,6 +1164,11 @@
       "note"
     );
 
+  const privacyConsentInput =
+    document.getElementById(
+      "privacyConsent"
+    );
+
   const totalPrice =
     document.getElementById(
       "totalPrice"
@@ -1095,6 +1178,16 @@
     document.getElementById(
       "confirmButton"
     );
+
+  privacyConsentInput.addEventListener(
+    "change",
+    function() {
+
+      confirmButton.disabled =
+        !privacyConsentInput.checked;
+
+    }
+  );
 
   const confirmModal =
     document.getElementById(
@@ -2151,6 +2244,18 @@
     }
 
 
+    if (
+      !privacyConsentInput.checked
+    ) {
+
+      privacyConsentInput.focus();
+
+      throw new Error(
+        "個人情報の取り扱いをご確認のうえ、同意欄にチェックしてください。"
+      );
+    }
+
+
     return {
       customerName:
         customerName,
@@ -2360,6 +2465,27 @@
       isSubmitting ||
       !pendingReservation
     ) {
+      return;
+    }
+
+
+    if (
+      !privacyConsentInput.checked
+    ) {
+
+      closeConfirmationModal();
+
+      showError(
+        "個人情報の取り扱いをご確認のうえ、同意欄にチェックしてください。"
+      );
+
+      privacyConsentInput.focus();
+
+      privacyConsentInput.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
       return;
     }
 
